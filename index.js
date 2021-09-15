@@ -46,7 +46,7 @@ app.get('/:id', databaseStatus, async (req, res, next) => {
   try {
     const link = await getLinkByUniqueid(req.params.id);
     console.log(link);
-    res.send(`${WEB_SERVER.ORIGIN}/${req.params.id} - OK`);
+    res.redirect(link.original);
   } catch (error) {
     return next(error);
   }
