@@ -8,7 +8,7 @@ const router = require('express').Router();
 // GET ../links
 router.get('/:id', async (req, res, next) => {
   try {
-    const link = await getLinkByUniqueid(req.params.id);
+    const link = await getLinkByUniqueid(req.params.idm, false);
     console.log(link);
     res.json({ link: link });
   } catch (error) {

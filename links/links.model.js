@@ -22,7 +22,7 @@ const linkSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    expires: 604800,
+    expires: 604800 * 4,
     default: Date.now,
   },
   deleted: {

@@ -4,22 +4,47 @@ const { createUniqueId, shortenUrl } = require('../lib/utils');
 // const Team = require('./team.model');
 const Link = require('./links.model');
 
-function getLinkByUniqueid(uniqueid) {
+function getLinkByUniqueid(uniqueid, redirect = false) {
   return new Promise(async (resolve, reject) => {
     //
     try {
-      const link = await Link.findOne(
-        { uniqueid: uniqueid, deleted: false },
-        {
-          '__v': 0,
-          '_id': 0,
-          'deleted': 0,
-        }
-      );
+      if (!redirect) {
+        const link = await Link.findOne(
+          { uniqueid: uniqueid, deleted: false },
+          {
+            '__v': 0,
+            '_id': 0,
+            'deleted': 0,
+          }
+        );
 
-      if (!link) return reject(new Error(errorMessages.NOT_FOUND));
+        if (!link) return reject(new Error(errorMessages.NOT_FOUND));
 
-      return resolve(link);
+        return resolve(link);
+      }
+
+      if (redirect) {
+        const link = await Link.findOneAndUpdate(
+          { uniqueid: uniqueid, deleted: false },
+          {
+            $inc: {
+              clicks: 1,
+            },
+          },
+          {
+            projection: {
+              '__v': 0,
+              '_id': 0,
+              'deleted': 0,
+            },
+            new: true,
+          }
+        );
+
+        if (!link) return reject(new Error(errorMessages.NOT_FOUND));
+
+        return resolve(link);
+      }
     } catch (error) {
       console.log(error);
       return reject(new Error(errorMessages.INTERNAL));

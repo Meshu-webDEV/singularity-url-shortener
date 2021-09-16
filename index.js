@@ -41,10 +41,9 @@ app.use(express.json());
 // Route
 
 // GET ../:id - Redirect to specific URL id
-
 app.get('/:id', databaseStatus, async (req, res, next) => {
   try {
-    const link = await getLinkByUniqueid(req.params.id);
+    const link = await getLinkByUniqueid(req.params.id, true);
     console.log(link);
     res.redirect(link.original);
   } catch (error) {
